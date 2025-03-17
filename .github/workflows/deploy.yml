@@ -1,0 +1,38 @@
+name: Deploy para EC2 Lightsail
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🚀 Checkout do código
+        uses: actions/checkout@v3
+
+      - name: 🔑 Configurar SSH
+        run: |
+          echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}" > key.pem
+          chmod 600 key.pem
+
+      - name: 📂 Deploy para a EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            cd /home/bitnami/API_Traveler/API-traveler
+
+            # Parar a aplicação atual
+            pm2 stop all || true
+
+            # Atualizar o código
+            git pull origin master
+
+            # Instalar dependências e construir
+            npm install
+            npm run dev
+
+            # Reiniciar a aplicação com PM2
+            pm2 restart all --update-env
+          EOF
