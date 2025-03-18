@@ -21,18 +21,20 @@ jobs:
       - name: 📂 Deploy para a EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            cd /home/bitnami/API_Traveler/API-traveler
-
-            # Parar a aplicação atual
-            pm2 stop all || true
-
-            # Atualizar o código
-            git pull origin master
-
-            # Instalar dependências e construir
-            npm install
-            npm run dev
-
-            # Reiniciar a aplicação com PM2
-            pm2 restart all --update-env
+            sudo su - << 'ROOTCOMMANDS'
+              cd /home/bitnami/API_Traveler/API-traveler
+  
+              # Parar a aplicação atual
+              pm2 stop all || true
+  
+              # Atualizar o código
+              git pull origin master
+  
+              # Instalar dependências e construir
+              npm install
+              npm run dev
+  
+              # Reiniciar a aplicação com PM2
+              pm2 restart all --update-env
+            ROOTCOMMANDS
           EOF
