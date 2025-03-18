@@ -20,7 +20,7 @@ jobs:
 
       - name: 📂 Deploy para a EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          ssh -vvv -o StrictHostKeyChecking=no -i key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo Conexão SSH bem-sucedida"
             cd /home/bitnami/API_Traveler/API-traveler
 
             # Parar a aplicação atual
