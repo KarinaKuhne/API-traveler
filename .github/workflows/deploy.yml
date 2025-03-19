@@ -28,7 +28,7 @@ jobs:
           chmod 644 ~/.ssh/known_hosts
 
       - name: Test SSH Connection
-        run: ssh -v -o StrictHostKeyChecking=no {{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'Connection successful'"
+        run: ssh -v -o StrictHostKeyChecking=no bitnami@${{ secrets.EC2_HOST }} "echo 'Connection successful'"
 
 
       - name: 📂 Deploy para a EC2
